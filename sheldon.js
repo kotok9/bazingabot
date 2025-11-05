@@ -9,7 +9,39 @@ const quotes = JSON.parse(fs.readFileSync('quotes.json', 'utf8'));
 const token = process.env.TELEGRAM_BOT_TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 
-// Helper function to get random item from array
+// Track recently used quotes per chat to avoid repetition
+const recentQuotes = new Map();
+const MAX_RECENT = 20; // Don't repeat until 20 other quotes are used
+
+// Smart quote picker - avoids recently used quotes
+function getSmartQuote(chatId, category) {
+  const categoryKey = `${chatId}_${category}`;
+  
+  if (!recentQuotes.has(categoryKey)) {
+    recentQuotes.set(categoryKey, []);
+  }
+  
+  const recent = recentQuotes.get(categoryKey);
+  const available = quotes[category].filter(q => !recent.includes(q));
+  
+  // If we've used most quotes, reset the recent list
+  if (available.length === 0) {
+    recent.length = 0;
+    return getRandomItem(quotes[category]);
+  }
+  
+  const selected = getRandomItem(available);
+  
+  // Add to recent list and keep only MAX_RECENT items
+  recent.push(selected);
+  if (recent.length > MAX_RECENT) {
+    recent.shift();
+  }
+  
+  return selected;
+}
+
+// Helper function to get random item from array (fallback)
 function getRandomItem(array) {
   return array[Math.floor(Math.random() * array.length)];
 }
@@ -33,19 +65,19 @@ bot.onText(/\/start/, (msg) => {
 // BAZINGA command
 bot.onText(/\/bazinga/, (msg) => {
   const chatId = msg.chat.id;
-  bot.sendMessage(chatId, getRandomItem(quotes.bazinga));
+  bot.sendMessage(chatId, getSmartQuote(chatId, 'bazinga'));
 });
 
 // Fact command
 bot.onText(/\/fact/, (msg) => {
   const chatId = msg.chat.id;
-  bot.sendMessage(chatId, `🔬 ${getRandomItem(quotes.facts)}`);
+  bot.sendMessage(chatId, `🔬 ${getSmartQuote(chatId, 'facts')}`);
 });
 
 // Quote command
 bot.onText(/\/quote/, (msg) => {
   const chatId = msg.chat.id;
-  bot.sendMessage(chatId, `💬 "${getRandomItem(quotes.quotes)}"`);
+  bot.sendMessage(chatId, `💬 "${getSmartQuote(chatId, 'quotes')}"`);
 });
 
 // Knock knock knock
@@ -88,9 +120,26 @@ bot.on('message', (msg) => {
     return;
   }
   
-  // 30% chance to respond with a random reaction
-  if (Math.random() < 0.3) {
-    bot.sendMessage(chatId, getRandomItem(quotes.reactions));
+  // Respond to 90% of messages (good balance between active and not annoying)
+  if (Math.random() > 0.85) {
+    return;
+  }
+  
+  // Randomly choose between different response types for more variety
+  const responseType = Math.random();
+  
+  if (responseType < 0.5) {
+    // 50% chance: reaction
+    bot.sendMessage(chatId, getSmartQuote(chatId, 'reactions'));
+  } else if (responseType < 0.7) {
+    // 20% chance: fact
+    bot.sendMessage(chatId, `🔬 ${getSmartQuote(chatId, 'facts')}`);
+  } else if (responseType < 0.9) {
+    // 20% chance: quote
+    bot.sendMessage(chatId, `💬 "${getSmartQuote(chatId, 'quotes')}"`);
+  } else {
+    // 10% chance: BAZINGA!
+    bot.sendMessage(chatId, getSmartQuote(chatId, 'bazinga'));
   }
 });
 

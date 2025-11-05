@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node sheldon.js"
   },
-  "keywords": ["telegram", "bot", "sheldon", "bazinga"],
+  "keywords": ["telegram", "bot", "sheldon", "bazinga", "big-bang-theory"],
   "author": "",
   "license": "MIT",
   "dependencies": {

@@ -1,34 +1,18 @@
 # 🧪 BAZINGA! Sheldon Bot
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+![Node.js](https://img.shields.io/badge/node-%3E%3D18.0.0-brightgreen)
+![Telegram](https://img.shields.io/badge/Telegram-Bot-blue)
+
 A simple Telegram bot that responds with random Sheldon Cooper quotes.
 
-## Setup
+> "I'm not insane, my mother had me tested!"
 
-1. Install dependencies:
-```bash
-npm install
-```
+## ✨ Features
 
-2. Create a new Telegram bot:
-   - Message [@BotFather](https://t.me/botfather) on Telegram
-   - Send `/newbot`
-   - Follow the instructions
-   - Copy your bot token
-
-3. Create `.env` file:
-```bash
-cp .env.example .env
-```
-
-4. Add your bot token to `.env`:
-```
-TELEGRAM_BOT_TOKEN=your_actual_token_here
-```
-
-5. Run the bot:
-```bash
-npm start
-```
+- **140+ unique quotes** - Fresh Sheldon content you haven't heard a million times
+- **Smart rotation system** - Won't repeat quotes (tracks last 20 used per category)
+- **Multiple response types** - Reactions, facts, quotes, and BAZINGA moments
 
 ## Commands
 
@@ -37,10 +21,3 @@ npm start
 - `/fact` - Random Sheldon fact
 - `/quote` - Random Sheldon quote
 - `/knock` - Knock knock knock... Penny!
-
-The bot also has a 30% chance to respond to any non-command message with a snarky Sheldon reaction!
-
-## That's it!
-
-No databases. No complex features. Just pure Sheldon chaos. 🎉
-
