@@ -8,7 +8,7 @@ A simple Telegram bot that responds with random Sheldon Cooper quotes.
 
 > "I'm not insane, my mother had me tested!"
 
-@bazingabazingabot on Telegram
+Telegram: https://t.me/bazingabazingabot
 
 ## ✨ Features
 
