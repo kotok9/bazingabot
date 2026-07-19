@@ -145,3 +145,22 @@ bot.on('message', (msg) => {
 
 console.log('🧪 Sheldon Bot is running... BAZINGA!');
 
+// --- daily heartbeat (03:00 server time) ---
+async function heartbeat() {
+  const up = process.uptime();
+  const u = `${Math.floor(up / 86400)}d${Math.floor((up % 86400) / 3600)}h${Math.floor((up % 3600) / 60)}m`;
+  const rss = Math.round(process.memoryUsage().rss / 1048576);
+  let who = '?', pend = '?';
+  try { who = '@' + (await bot.getMe()).username; } catch (e) { who = 'getMe FAIL:' + e.message; }
+  try { pend = (await bot.getWebHookInfo()).pending_update_count; } catch (e) { pend = 'err'; }
+  console.log(`🧪 [heartbeat] sheldon alive | uptime ${u} | ${who} | pending=${pend} | rss=${rss}MB`);
+}
+function scheduleHeartbeat() {
+  const now = new Date(), next = new Date(now);
+  next.setHours(3, 0, 0, 0);
+  if (next <= now) next.setDate(next.getDate() + 1);
+  setTimeout(() => { heartbeat(); scheduleHeartbeat(); }, next - now);
+}
+heartbeat();
+scheduleHeartbeat();
+
