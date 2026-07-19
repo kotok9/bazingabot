@@ -7,7 +7,7 @@ const quotes = JSON.parse(fs.readFileSync('quotes.json', 'utf8'));
 
 // Create bot
 const token = process.env.TELEGRAM_BOT_TOKEN;
-const bot = new TelegramBot(token, { polling: true });
+const bot = new TelegramBot(token, { polling: true, request: { timeout: 30000 } });
 
 // Track recently used quotes per chat to avoid repetition
 const recentQuotes = new Map();
